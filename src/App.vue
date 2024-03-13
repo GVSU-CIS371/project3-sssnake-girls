@@ -4,8 +4,7 @@
             :creamer=currentCreamer
             :syrup=currentSyrup
             :beverage=currentBase
-    >
-    </Beverage>
+    />
     <ul>
       <li>
         <template v-for="temp in temps" :key="temp">
