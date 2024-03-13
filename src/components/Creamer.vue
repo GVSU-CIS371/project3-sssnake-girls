@@ -1,3 +1,4 @@
+
 <template>
   <div class="froth">
     <div v-for=" in 5" class="foam"></div>
@@ -13,6 +14,8 @@ type Creamer = {
   name: string;
   color: string;
 };
+<!-- okay I have no clue how /where one would do this but if we had an if-statement choosing between styles based on the radio button clicked
+and then v-bind it in Beverage -->
 const Creamers: Creamer[] = [
   {
     name: "Milk",
