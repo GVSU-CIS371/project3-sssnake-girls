@@ -1,9 +1,9 @@
 <template>
   <div>
     <Beverage :isIced="currentTemp === 'Cold'"
-            :creamer=currentCreamer
-            :syrup=currentSyrup
-            :beverage=currentBase
+            :creamer="currentCreamer"
+            :syrup="currentSyrup"
+            :beverage="currentBase"
     />
     <ul>
       <li>
