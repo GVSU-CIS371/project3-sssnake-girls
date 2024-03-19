@@ -1,7 +1,7 @@
 
 <template>
-  <div class="froth">
-    <div v-for=" in 5" class="foam"></div>
+  <div class="froth" >
+    <div v-for=" in 5" class="foam" :style="customStyle"></div>
   </div>
 </template>
 
@@ -14,8 +14,7 @@ type Creamer = {
   name: string;
   color: string;
 };
-<!-- okay I have no clue how /where one would do this but if we had an if-statement choosing between styles based on the radio button clicked
-and then v-bind it in Beverage -->
+
 const Creamers: Creamer[] = [
   {
     name: "Milk",
@@ -33,6 +32,17 @@ const Creamers: Creamer[] = [
 
 const props = withDefaults(defineProps<Prop>(), {
   name: "Milk",
+});
+const customStyle = computed(() => {
+  const creamer = Creamers.find(c=>c.name===props.name);
+  if (creamer)
+    return {
+        backgroundColor: creamer?.color,
+    };
+  else
+    return {
+        backgroundColor: "transparent",
+    };
 });
 </script>
 <style lang="scss" scoped>
