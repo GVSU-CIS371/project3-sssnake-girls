@@ -35,13 +35,8 @@ const props = withDefaults(defineProps<Prop>(), {
 });
 const customStyle = computed(() => {
   const creamer = Creamers.find(c=>c.name===props.name);
-  if (creamer)
     return {
         backgroundColor: creamer?.color,
-    };
-  else
-    return {
-        backgroundColor: "transparent",
     };
 });
 </script>

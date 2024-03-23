@@ -32,14 +32,15 @@ const props = withDefaults(defineProps<Prop>(), {
 });
 const customStyle = computed(() => {
   const syrup = Syrups.find(s=>s.name===props.name);
-  if (syrup)
-    return {
-        backgroundColor: syrup?.color,
-    };
-  else
-    return {
-        backgroundColor: "transparent",
-    };
+  return {
+    background: `repeating-linear-gradient(
+      45deg,
+      ${syrup?.color},
+      ${syrup?.color} 10px,
+      rgba(225, 207, 149, 1) 10px,
+      rgba(225, 207, 149, 1) 20px
+    )`,
+  };
 });
 </script>
 <style lang="scss" scoped>
