@@ -62,29 +62,28 @@
           </label>
         </template>
       </li>
-      <li>
-        <input
-          type="text"
-          v-model="textBoxValue">
-        <button @click="handleButtonClick">Save</button>
+      <li style="padding-top: 10px; padding-left: 40px;">
+          <input
+            type="text"
+            v-model="textBoxValue">
+          <button @click="makeBeverage">Make Beverage</button>
       </li>
-      <li v-for="item in items" :key="item.name">
-        {{ item.name }} - {{ item.temp }} - {{ item.creamer }} - {{ item.syrup }} - {{ item.beverage }}
+      <h2 style="padding-left:20px;">Saved Recipes:</h2>
+      <li v-for="item in items" :key="item.name" style="padding:4px">
+        <button @click="() => showBeverage(item)">Show Recipe</button>
+        {{ item.name }}
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-//import { storeToRefs } from "pinia";
+import { ref, onBeforeMount } from "vue";
 import Beverage from "./components/Beverage.vue";
 import { useItemStore, bev  } from './itemStore';
 
 const myStore = useItemStore();
-//const { myStore } = storeToRefs(useItemStore());
-
-// Define reactive data
+const items = ref<bev[]>([]);
 const temps = ref(["Hot", "Cold"]);
 const currentTemp = ref("Hot");
 const creamers = ref(["None","Milk","Cream","Half & Half"]);
@@ -93,20 +92,9 @@ const syrups = ref(["None","Vanilla","Caramel","Hazelnut"]);
 const currentSyrup = ref("None");
 const baseBeverages = ref(["Coffee","Green Tea","Black Tea"]);
 const currentBeverage = ref("Coffee");
-
 const textBoxValue = ref("");
 
-
-//const items = myStore.data ? [myStore.data] : [];
-
-const items = computed(() => {
-    // If the store's data is null, return an empty array
-    if (!myStore.data) return [];
-    // Otherwise, return an array containing the store's data
-    return [myStore.data];
-});
-
-function handleButtonClick(){
+function makeBeverage(){
     const newBev: bev = {
       name:textBoxValue.value,
       temp:currentTemp.value,
@@ -114,17 +102,23 @@ function handleButtonClick(){
       syrup:currentSyrup.value,
       beverage:currentBeverage.value
     };
-    //const myStore = useItemStore();
-    myStore.setData(newBev);
-    //storeData(newBev);
-    //alert('Pinia state: ' + myStore.data.name);
-    //console.log(myStore.data.length)
-    console.log(items.value.length)
-    for (let i = 0; i < items.value.length; i++) {
-      const item = items.value[i];
-      console.log(item.name, item.temp, item.creamer, item.syrup, item.beverage);
-    }
+    myStore.$patch((state) => {
+      state.data?.push(newBev);
+    });
 }
+
+function showBeverage(item: bev){
+    currentTemp.value = item.temp;
+    currentCreamer.value = item.creamer;
+    currentSyrup.value = item.syrup;
+    currentBeverage.value = item.beverage;
+}
+
+onBeforeMount(async () => {
+    await myStore.$reset();
+    await myStore.fetchData();
+    items.value = myStore.data || [];
+});
 </script>
 
 <style lang="scss">
