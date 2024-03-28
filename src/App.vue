@@ -62,13 +62,28 @@
           </label>
         </template>
       </li>
+      <li>
+        <input
+          type="text"
+          v-model="textBoxValue">
+        <button @click="handleButtonClick">Save</button>
+      </li>
+      <li v-for="item in items" :key="item.name">
+        {{ item.name }} - {{ item.temp }} - {{ item.creamer }} - {{ item.syrup }} - {{ item.beverage }}
+      </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
+//import { storeToRefs } from "pinia";
 import Beverage from "./components/Beverage.vue";
+import { useItemStore, bev  } from './itemStore';
+
+const myStore = useItemStore();
+//const { myStore } = storeToRefs(useItemStore());
+
 // Define reactive data
 const temps = ref(["Hot", "Cold"]);
 const currentTemp = ref("Hot");
@@ -78,6 +93,38 @@ const syrups = ref(["None","Vanilla","Caramel","Hazelnut"]);
 const currentSyrup = ref("None");
 const baseBeverages = ref(["Coffee","Green Tea","Black Tea"]);
 const currentBeverage = ref("Coffee");
+
+const textBoxValue = ref("");
+
+
+//const items = myStore.data ? [myStore.data] : [];
+
+const items = computed(() => {
+    // If the store's data is null, return an empty array
+    if (!myStore.data) return [];
+    // Otherwise, return an array containing the store's data
+    return [myStore.data];
+});
+
+function handleButtonClick(){
+    const newBev: bev = {
+      name:textBoxValue.value,
+      temp:currentTemp.value,
+      creamer:currentCreamer.value,
+      syrup:currentSyrup.value,
+      beverage:currentBeverage.value
+    };
+    //const myStore = useItemStore();
+    myStore.setData(newBev);
+    //storeData(newBev);
+    //alert('Pinia state: ' + myStore.data.name);
+    //console.log(myStore.data.length)
+    console.log(items.value.length)
+    for (let i = 0; i < items.value.length; i++) {
+      const item = items.value[i];
+      console.log(item.name, item.temp, item.creamer, item.syrup, item.beverage);
+    }
+}
 </script>
 
 <style lang="scss">
